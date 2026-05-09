@@ -3,30 +3,61 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Admin</title>
+<title>Admin Panel</title>
 
 <style>
 
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
 body{
-    background:#0f172a;
+    background:#020f2d;
     color:white;
-    font-family:Arial;
-    padding:30px;
+    padding:30px 15px;
 }
 
 .container{
-    max-width:700px;
+    width:100%;
+    max-width:800px;
     margin:auto;
+}
+
+h1{
+    margin-bottom:25px;
+    font-size:48px;
+}
+
+.card{
+    background:#1e293b;
+    padding:25px;
+    border-radius:24px;
+    margin-bottom:30px;
 }
 
 input,
 textarea,
 button{
+
     width:100%;
-    margin-bottom:15px;
-    padding:14px;
+
+    padding:16px;
+
     border:none;
-    border-radius:12px;
+
+    border-radius:14px;
+
+    margin-bottom:16px;
+
+    font-size:16px;
+}
+
+textarea{
+    min-height:120px;
+    resize:vertical;
 }
 
 button{
@@ -35,10 +66,55 @@ button{
     cursor:pointer;
 }
 
-.card{
+button:hover{
+    opacity:0.9;
+}
+
+.game-item{
+
     background:#1e293b;
-    padding:25px;
+
+    padding:20px;
+
     border-radius:20px;
+
+    margin-bottom:20px;
+}
+
+.game-item img{
+
+    width:100%;
+
+    height:240px;
+
+    object-fit:cover;
+
+    border-radius:14px;
+
+    margin-bottom:15px;
+}
+
+.delete-btn{
+    background:#dc2626;
+}
+
+.delete-btn:hover{
+    background:#ef4444;
+}
+
+.status{
+    margin-top:10px;
+}
+
+@media(max-width:700px){
+
+    h1{
+        font-size:36px;
+    }
+
+    .game-item img{
+        height:180px;
+    }
 }
 
 </style>
@@ -47,37 +123,64 @@ button{
 
 <div class="container">
 
-<h1>🎮 Admin Panel</h1>
+    <h1>🎮 Admin Panel</h1>
 
-<button id="loginBtn">
-    Login Google
-</button>
+    <button id="loginBtn">
+        Login Google
+    </button>
 
-<div class="card">
+    <div class="card">
 
-<input type="text" id="name" placeholder="Tên game">
+        <input
+            type="text"
+            id="name"
+            placeholder="Tên game"
+        >
 
-<input type="text" id="img" placeholder="Ảnh banner">
+        <input
+            type="text"
+            id="img"
+            placeholder="Ảnh banner"
+        >
 
-<textarea id="desc" placeholder="Mô tả"></textarea>
+        <textarea
+            id="desc"
+            placeholder="Mô tả"
+        ></textarea>
 
-<input type="text" id="image1" placeholder="Ảnh 1">
+        <input
+            type="text"
+            id="image1"
+            placeholder="Ảnh 1"
+        >
 
-<input type="text" id="image2" placeholder="Ảnh 2">
+        <input
+            type="text"
+            id="image2"
+            placeholder="Ảnh 2"
+        >
 
-<input type="text" id="image3" placeholder="Ảnh 3">
+        <input
+            type="text"
+            id="image3"
+            placeholder="Ảnh 3"
+        >
 
-<input type="text" id="image4" placeholder="Ảnh 4">
+        <input
+            type="text"
+            id="image4"
+            placeholder="Ảnh 4"
+        >
 
-<button id="addBtn">
-    Thêm Game
-</button>
+        <button id="addBtn">
+            Thêm Game
+        </button>
 
-<div id="status"></div>
+        <div class="status" id="status"></div>
 
-</div>
+    </div>
 
-<div id="gameList" style="margin-top:30px;"></div>
+    <div id="gameList"></div>
 
 </div>
 
@@ -87,21 +190,28 @@ import { initializeApp }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
 import {
+
     getFirestore,
     collection,
     addDoc,
     getDocs,
     deleteDoc,
     doc
+
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
+
 import {
+
     getAuth,
     GoogleAuthProvider,
-    signInWithPopup
+    signInWithPopup,
+    onAuthStateChanged
+
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+
 
 const firebaseConfig = {
 
@@ -120,6 +230,7 @@ const firebaseConfig = {
     measurementId: "G-7FPR8W312Y"
 };
 
+
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
@@ -128,52 +239,118 @@ const auth = getAuth(app);
 
 const provider = new GoogleAuthProvider();
 
-const loginBtn = document.getElementById("loginBtn");
 
-const addBtn = document.getElementById("addBtn");
+const loginBtn =
+document.getElementById("loginBtn");
 
-const statusDiv = document.getElementById("status");
+const addBtn =
+document.getElementById("addBtn");
 
-const gameList = document.getElementById("gameList");
+const statusDiv =
+document.getElementById("status");
+
+const gameList =
+document.getElementById("gameList");
+
+
+/* LOGIN */
 
 loginBtn.onclick = async ()=>{
 
-    await signInWithPopup(auth, provider);
+    try{
+
+        await signInWithPopup(auth, provider);
+
+    }
+    catch(error){
+
+        alert(error.message);
+    }
 };
+
+
+/* SHOW EMAIL */
+
+onAuthStateChanged(auth,(user)=>{
+
+    if(user){
+
+        loginBtn.innerHTML =
+        `✅ ${user.email}`;
+    }
+});
+
+
+/* ADD GAME */
 
 addBtn.onclick = async ()=>{
 
-    const name = document.getElementById("name").value;
+    const name =
+    document.getElementById("name").value;
 
-    const img = document.getElementById("img").value;
+    const img =
+    document.getElementById("img").value;
 
-    const desc = document.getElementById("desc").value;
+    const desc =
+    document.getElementById("desc").value;
 
-    const image1 = document.getElementById("image1").value;
+    const image1 =
+    document.getElementById("image1").value;
 
-    const image2 = document.getElementById("image2").value;
+    const image2 =
+    document.getElementById("image2").value;
 
-    const image3 = document.getElementById("image3").value;
+    const image3 =
+    document.getElementById("image3").value;
 
-    const image4 = document.getElementById("image4").value;
+    const image4 =
+    document.getElementById("image4").value;
 
-    await addDoc(collection(db,"games"),{
 
-        name,
-        img,
-        desc,
-        image1,
-        image2,
-        image3,
-        image4,
+    if(
+        !name ||
+        !img ||
+        !desc
+    ){
 
-        createdAt: Date.now()
-    });
+        statusDiv.innerHTML =
+        "❌ Nhập đầy đủ thông tin";
 
-    statusDiv.innerHTML = "✅ Đã thêm game";
+        return;
+    }
 
-    loadGames();
+
+    try{
+
+        await addDoc(collection(db,"games"),{
+
+            name,
+            img,
+            desc,
+
+            image1,
+            image2,
+            image3,
+            image4,
+
+            createdAt: Date.now()
+        });
+
+        statusDiv.innerHTML =
+        "✅ Đã thêm game";
+
+        loadGames();
+
+    }
+    catch(error){
+
+        statusDiv.innerHTML =
+        "❌ " + error.message;
+    }
 };
+
+
+/* LOAD GAME LIST */
 
 async function loadGames(){
 
@@ -182,39 +359,26 @@ async function loadGames(){
     const querySnapshot =
     await getDocs(collection(db,"games"));
 
+
     querySnapshot.forEach((game)=>{
 
         const data = game.data();
 
         gameList.innerHTML += `
 
-        <div style="
-            background:#1e293b;
-            padding:20px;
-            border-radius:16px;
-            margin-bottom:15px;
-        ">
+        <div class="game-item">
 
-            <img
-                src="${data.img}"
-                style="
-                    width:100%;
-                    max-height:220px;
-                    object-fit:cover;
-                    border-radius:12px;
-                    margin-bottom:15px;
-                "
-            >
+            <img src="${data.img}">
 
             <h2>${data.name}</h2>
 
-            <p style="margin:10px 0 15px;">
+            <p style="margin:10px 0 20px;">
                 ${data.desc}
             </p>
 
             <button
-                onclick="deleteGame('${game.id}')"
-                style="background:#dc2626;"
+                class="delete-btn"
+                data-id="${game.id}"
             >
                 Xóa Game
             </button>
@@ -223,19 +387,29 @@ async function loadGames(){
 
         `;
     });
+
+
+    document
+    .querySelectorAll(".delete-btn")
+    .forEach((btn)=>{
+
+        btn.onclick = async ()=>{
+
+            const id =
+            btn.dataset.id;
+
+            const confirmDelete =
+            confirm("Bạn có chắc muốn xóa game?");
+
+            if(!confirmDelete) return;
+
+            await deleteDoc(doc(db,"games",id));
+
+            loadGames();
+        };
+    });
 }
 
-window.deleteGame = async function(id){
-
-    const confirmDelete =
-    confirm("Bạn có chắc muốn xóa game?");
-
-    if(!confirmDelete) return;
-
-    await deleteDoc(doc(db,"games",id));
-
-    loadGames();
-};
 
 loadGames();
 
