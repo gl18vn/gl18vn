@@ -85,4 +85,88 @@ import { initializeApp }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
 import {
+    getFirestore,
+    collection,
+    addDoc
+}
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+import {
+    getAuth,
+    GoogleAuthProvider,
+    signInWithPopup
+}
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+
+const firebaseConfig = {
+
+    apiKey: "AIzaSyDJiIiAKSUbRjhsCloddYmoDHmAx-cJKzE",
+
+    authDomain: "gl18vn-381ae.firebaseapp.com",
+
+    projectId: "gl18vn-381ae",
+
+    storageBucket: "gl18vn-381ae.firebasestorage.app",
+
+    messagingSenderId: "488520527287",
+
+    appId: "1:488520527287:web:940013d50c56d927390c32",
+
+    measurementId: "G-7FPR8W312Y"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+const auth = getAuth(app);
+
+const provider = new GoogleAuthProvider();
+
+const loginBtn = document.getElementById("loginBtn");
+
+const addBtn = document.getElementById("addBtn");
+
+const statusDiv = document.getElementById("status");
+
+loginBtn.onclick = async ()=>{
+
+    await signInWithPopup(auth, provider);
+};
+
+addBtn.onclick = async ()=>{
+
+    const name = document.getElementById("name").value;
+
+    const img = document.getElementById("img").value;
+
+    const desc = document.getElementById("desc").value;
+
+    const image1 = document.getElementById("image1").value;
+
+    const image2 = document.getElementById("image2").value;
+
+    const image3 = document.getElementById("image3").value;
+
+    const image4 = document.getElementById("image4").value;
+
+    await addDoc(collection(db,"games"),{
+
+        name,
+        img,
+        desc,
+        image1,
+        image2,
+        image3,
+        image4,
+
+        createdAt: Date.now()
+    });
+
+    statusDiv.innerHTML = "✅ Đã thêm game";
+};
+
+</script>
+
+</body>
 </html>
