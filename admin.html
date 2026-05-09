@@ -1,61 +1,102 @@
 <!DOCTYPE html>
-<html lang="vi">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Admin</title>
-
-<style>
-
-body{
-    background:#0f172a;
-    color:white;
-    font-family:Arial;
-    padding:30px;
-}
-
-.container{
-    max-width:700px;
-    margin:auto;
-}
-
-input,
-textarea,
-button{
-    width:100%;
-    margin-bottom:15px;
-    padding:14px;
-    border:none;
-    border-radius:12px;
-}
-
-button{
-    background:#2563eb;
-    color:white;
-    cursor:pointer;
-}
-
-.card{
-    background:#1e293b;
-    padding:25px;
-    border-radius:20px;
-}
-
-</style>
-</head>
-<body>
-
-<div class="container">
-
-<h1>🎮 Admin Panel</h1>
-
-<button id="loginBtn">
-    Login Google
+<button id="addBtn">
+    Thêm Game
 </button>
 
-<div class="card">
+<div id="status"></div>
 
-<input type="text" id="name" placeholder="Tên game">
+</div>
 
-<input type="text" id="img" placeholder="Ảnh banner">
+</div>
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+import {
+    getFirestore,
+    collection,
+    addDoc
+}
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+import {
+    getAuth,
+    GoogleAuthProvider,
+    signInWithPopup
+}
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+
+const firebaseConfig = {
+
+    apiKey: "AIzaSyDJiIiAKSUbRjhsCloddYmoDHmAx-cJKzE",
+
+    authDomain: "gl18vn-381ae.firebaseapp.com",
+
+    projectId: "gl18vn-381ae",
+
+    storageBucket: "gl18vn-381ae.firebasestorage.app",
+
+    messagingSenderId: "488520527287",
+
+    appId: "1:488520527287:web:940013d50c56d927390c32",
+
+    measurementId: "G-7FPR8W312Y"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+const auth = getAuth(app);
+
+const provider = new GoogleAuthProvider();
+
+const loginBtn = document.getElementById("loginBtn");
+
+const addBtn = document.getElementById("addBtn");
+
+const statusDiv = document.getElementById("status");
+
+loginBtn.onclick = async ()=>{
+
+    await signInWithPopup(auth, provider);
+};
+
+addBtn.onclick = async ()=>{
+
+    const name = document.getElementById("name").value;
+
+    const img = document.getElementById("img").value;
+
+    const desc = document.getElementById("desc").value;
+
+    const image1 = document.getElementById("image1").value;
+
+    const image2 = document.getElementById("image2").value;
+
+    const image3 = document.getElementById("image3").value;
+
+    const image4 = document.getElementById("image4").value;
+
+    await addDoc(collection(db,"games"),{
+
+        name,
+        img,
+        desc,
+        image1,
+        image2,
+        image3,
+        image4,
+
+        createdAt: Date.now()
+    });
+
+    statusDiv.innerHTML = "✅ Đã thêm game";
+};
+
+</script>
+
+</body>
 </html>
