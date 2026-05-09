@@ -526,9 +526,14 @@ function renderGames(page){
     games.slice(start,end);
 
 
-    currentGames.forEach((game)=>{
+    currentGames.forEach((game,index)=>{
 
-        gameGrid.innerHTML += `
+    gameGrid.innerHTML += `
+
+    <a
+        href="game.html?id=${start + index}"
+        class="game-link"
+    >
 
         <div class="game-card">
 
@@ -544,8 +549,10 @@ function renderGames(page){
 
         </div>
 
-        `;
-    });
+    </a>
+
+    `;
+});
 
     renderPagination();
 }
