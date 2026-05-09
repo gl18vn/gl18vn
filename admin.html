@@ -77,6 +77,8 @@ button{
 
 </div>
 
+<div id="gameList" style="margin-top:30px;"></div>
+
 </div>
 
 <script type="module">
@@ -87,7 +89,10 @@ from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 import {
     getFirestore,
     collection,
-    addDoc
+    addDoc,
+    getDocs,
+    deleteDoc,
+    doc
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
@@ -129,6 +134,8 @@ const addBtn = document.getElementById("addBtn");
 
 const statusDiv = document.getElementById("status");
 
+const gameList = document.getElementById("gameList");
+
 loginBtn.onclick = async ()=>{
 
     await signInWithPopup(auth, provider);
@@ -164,7 +171,73 @@ addBtn.onclick = async ()=>{
     });
 
     statusDiv.innerHTML = "✅ Đã thêm game";
+
+    loadGames();
 };
+
+async function loadGames(){
+
+    gameList.innerHTML = "";
+
+    const querySnapshot =
+    await getDocs(collection(db,"games"));
+
+    querySnapshot.forEach((game)=>{
+
+        const data = game.data();
+
+        gameList.innerHTML += `
+
+        <div style="
+            background:#1e293b;
+            padding:20px;
+            border-radius:16px;
+            margin-bottom:15px;
+        ">
+
+            <img
+                src="${data.img}"
+                style="
+                    width:100%;
+                    max-height:220px;
+                    object-fit:cover;
+                    border-radius:12px;
+                    margin-bottom:15px;
+                "
+            >
+
+            <h2>${data.name}</h2>
+
+            <p style="margin:10px 0 15px;">
+                ${data.desc}
+            </p>
+
+            <button
+                onclick="deleteGame('${game.id}')"
+                style="background:#dc2626;"
+            >
+                Xóa Game
+            </button>
+
+        </div>
+
+        `;
+    });
+}
+
+window.deleteGame = async function(id){
+
+    const confirmDelete =
+    confirm("Bạn có chắc muốn xóa game?");
+
+    if(!confirmDelete) return;
+
+    await deleteDoc(doc(db,"games",id));
+
+    loadGames();
+};
+
+loadGames();
 
 </script>
 
