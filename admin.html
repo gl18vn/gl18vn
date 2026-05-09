@@ -3,440 +3,59 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
-<title>Game Hub Admin</title>
+<title>Admin</title>
 
 <style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, Helvetica, sans-serif;
-}
 
 body{
     background:#0f172a;
     color:white;
-    min-height:100vh;
-    padding:30px 15px;
+    font-family:Arial;
+    padding:30px;
 }
 
 .container{
-    width:100%;
     max-width:700px;
     margin:auto;
 }
 
-.title{
-    text-align:center;
-    margin-bottom:30px;
+input,
+textarea,
+button{
+    width:100%;
+    margin-bottom:15px;
+    padding:14px;
+    border:none;
+    border-radius:12px;
 }
 
-.title h1{
-    font-size:40px;
-    color:#60a5fa;
+button{
+    background:#2563eb;
+    color:white;
+    cursor:pointer;
 }
 
 .card{
     background:#1e293b;
     padding:25px;
     border-radius:20px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.35);
-}
-
-.input-group{
-    margin-bottom:20px;
-}
-
-.input-group label{
-    display:block;
-    margin-bottom:8px;
-    color:#cbd5e1;
-}
-
-.input-group input,
-.input-group textarea{
-
-    width:100%;
-    padding:14px;
-
-    border:none;
-    border-radius:12px;
-
-    background:#334155;
-    color:white;
-
-    font-size:16px;
-}
-
-.input-group textarea{
-    min-height:120px;
-    resize:vertical;
-}
-
-button{
-    width:100%;
-    padding:15px;
-
-    border:none;
-    border-radius:14px;
-
-    background:#2563eb;
-
-    color:white;
-    font-size:17px;
-
-    cursor:pointer;
-
-    transition:0.3s;
-}
-
-button:hover{
-    background:#3b82f6;
-}
-
-.login-btn{
-    margin-bottom:20px;
-}
-
-.status{
-    margin-top:20px;
-    text-align:center;
-}
-
-.game-list{
-    margin-top:40px;
-}
-
-.game-item{
-
-    background:#1e293b;
-
-    border-radius:16px;
-
-    padding:18px;
-
-    margin-bottom:15px;
-
-    display:flex;
-    gap:15px;
-    align-items:center;
-}
-
-.game-item img{
-    width:120px;
-    height:70px;
-    object-fit:cover;
-    border-radius:10px;
-}
-
-.game-info{
-    flex:1;
-}
-
-.delete-btn{
-    width:auto;
-    padding:10px 15px;
-    background:#dc2626;
-}
-
-.delete-btn:hover{
-    background:#ef4444;
-}
-
-@media(max-width:700px){
-
-    .game-item{
-        flex-direction:column;
-        align-items:flex-start;
-    }
-
-    .game-item img{
-        width:100%;
-        height:180px;
-    }
 }
 
 </style>
 </head>
-
 <body>
 
 <div class="container">
 
-    <div class="title">
-        <h1>🎮 ADMIN PANEL</h1>
-    </div>
+<h1>🎮 Admin Panel</h1>
 
-    <button class="login-btn" id="loginBtn">
-        Login With Google
-    </button>
+<button id="loginBtn">
+    Login Google
+</button>
 
-    <div class="card">
+<div class="card">
 
-        <div class="input-group">
-            <label>Tên Game</label>
-            <input type="text" id="name" placeholder="Minecraft">
-        </div>
+<input type="text" id="name" placeholder="Tên game">
 
-        <div class="input-group">
-            <label>Link Ảnh</label>
-            <input type="text" id="img" placeholder="https://...">
-        </div>
-
-        <div class="input-group">
-            <label>Mô Tả</label>
-            <textarea id="desc" placeholder="Mô tả game..."></textarea>
-        </div>
-
-        <button id="addBtn">
-            Thêm Game
-        </button>
-
-        <div class="status" id="status"></div>
-
-    </div>
-
-    <div class="game-list" id="gameList"></div>
-
-</div>
-
-<script type="module">
-
-/* =========================
-FIREBASE
-========================= */
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-
-import {
-
-    getFirestore,
-    collection,
-    addDoc,
-    getDocs,
-    deleteDoc,
-    doc
-
-}
-from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
-
-
-import {
-
-    getAuth,
-    GoogleAuthProvider,
-    signInWithPopup,
-    onAuthStateChanged
-
-}
-from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
-
-
-/* =========================
-CONFIG
-========================= */
-
-const firebaseConfig = {
-
-    apiKey: "AIzaSyDJiIiAKSUbRjhsCloddYmoDHmAx-cJKzE",
-
-    authDomain: "gl18vn-381ae.firebaseapp.com",
-
-    projectId: "gl18vn-381ae",
-
-    storageBucket: "gl18vn-381ae.firebasestorage.app",
-
-    messagingSenderId: "488520527287",
-
-    appId: "1:488520527287:web:940013d50c56d927390c32",
-
-    measurementId: "G-7FPR8W312Y"
-};
-
-
-/* =========================
-INIT
-========================= */
-
-const app = initializeApp(firebaseConfig);
-
-const db = getFirestore(app);
-
-const auth = getAuth(app);
-
-const provider = new GoogleAuthProvider();
-
-
-/* =========================
-ELEMENTS
-========================= */
-
-const loginBtn = document.getElementById("loginBtn");
-
-const addBtn = document.getElementById("addBtn");
-
-const statusDiv = document.getElementById("status");
-
-const gameList = document.getElementById("gameList");
-
-
-/* =========================
-LOGIN
-========================= */
-
-loginBtn.onclick = async ()=>{
-
-    try{
-
-        await signInWithPopup(auth, provider);
-
-    }
-    catch(error){
-
-        alert(error.message);
-    }
-};
-
-
-/* =========================
-AUTH STATE
-========================= */
-
-onAuthStateChanged(auth,(user)=>{
-
-    if(user){
-
-        loginBtn.innerHTML =
-        `✅ ${user.email}`;
-
-        loadGames();
-    }
-});
-
-
-/* =========================
-ADD GAME
-========================= */
-
-addBtn.onclick = async ()=>{
-
-    const name =
-    document.getElementById("name").value;
-
-    const img =
-    document.getElementById("img").value;
-
-    const desc =
-    document.getElementById("desc").value;
-
-
-    if(!name || !img || !desc){
-
-        statusDiv.innerHTML =
-        "❌ Vui lòng nhập đầy đủ";
-
-        return;
-    }
-
-
-    try{
-
-        await addDoc(collection(db,"games"),{
-
-            name,
-            img,
-            desc,
-            createdAt: Date.now()
-
-        });
-
-        statusDiv.innerHTML =
-        "✅ Đã thêm game";
-
-
-        document.getElementById("name").value = "";
-
-        document.getElementById("img").value = "";
-
-        document.getElementById("desc").value = "";
-
-
-        loadGames();
-
-    }
-    catch(error){
-
-        statusDiv.innerHTML =
-        "❌ " + error.message;
-    }
-};
-
-
-/* =========================
-LOAD GAMES
-========================= */
-
-async function loadGames(){
-
-    gameList.innerHTML = "";
-
-    const querySnapshot =
-    await getDocs(collection(db,"games"));
-
-
-    querySnapshot.forEach((game)=>{
-
-        const data = game.data();
-
-        gameList.innerHTML += `
-
-        <div class="game-item">
-
-            <img src="${data.img}">
-
-            <div class="game-info">
-
-                <h3>${data.name}</h3>
-
-                <p>${data.desc}</p>
-
-            </div>
-
-            <button
-                class="delete-btn"
-                onclick="deleteGame('${game.id}')"
-            >
-                Xóa
-            </button>
-
-        </div>
-
-        `;
-    });
-}
-
-
-/* =========================
-DELETE GAME
-========================= */
-
-window.deleteGame = async function(id){
-
-    const confirmDelete =
-    confirm("Bạn có chắc muốn xóa game?");
-
-    if(!confirmDelete) return;
-
-
-    await deleteDoc(doc(db,"games",id));
-
-    loadGames();
-};
-
-</script>
-
-</body>
+<input type="text" id="img" placeholder="Ảnh banner">
 </html>
