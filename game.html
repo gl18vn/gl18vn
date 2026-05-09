@@ -1,4 +1,49 @@
 <!DOCTYPE html>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Game Detail</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#0f172a;
+    color:white;
+}
+
+.container{
+    width:95%;
+    max-width:1200px;
+    margin:auto;
+    padding:30px 0 80px;
+}
+
+.back-btn{
+    display:inline-block;
+    margin-bottom:30px;
+    padding:12px 20px;
+    background:#2563eb;
+    color:white;
+    text-decoration:none;
+    border-radius:12px;
+}
+
+.banner{
+    width:100%;
+    height:450px;
+    object-fit:cover;
+    border-radius:25px;
+    margin-bottom:30px;
+}
+
+.title{
+    font-size:42px;
     margin-bottom:20px;
     color:#60a5fa;
 }
@@ -7,7 +52,6 @@
     line-height:1.8;
     color:#d1d5db;
     margin-bottom:40px;
-    font-size:18px;
 }
 
 .gallery{
@@ -21,35 +65,16 @@
     height:260px;
     object-fit:cover;
     border-radius:20px;
-    transition:0.3s;
-}
-
-.gallery img:hover{
-    transform:scale(1.03);
-}
-
-.loading{
-    text-align:center;
-    margin-top:100px;
-    font-size:28px;
 }
 
 @media(max-width:700px){
-
-    .banner{
-        height:250px;
-    }
-
-    .title{
-        font-size:32px;
-    }
 
     .gallery{
         grid-template-columns:1fr;
     }
 
-    .gallery img{
-        height:220px;
+    .banner{
+        height:250px;
     }
 }
 
@@ -62,10 +87,6 @@
     <a href="index.html" class="back-btn">
         ← Quay Lại
     </a>
-
-    <div id="loading" class="loading">
-        Đang tải game...
-    </div>
 
     <div id="content"></div>
 
@@ -81,25 +102,4 @@ import {
     collection,
     getDocs
 }
-from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
-
-
-const firebaseConfig = {
-
-    apiKey: "AIzaSyDJiIiAKSUbRjhsCloddYmoDHmAx-cJKzE",
-
-    authDomain: "gl18vn-381ae.firebaseapp.com",
-
-    projectId: "gl18vn-381ae",
-
-    storageBucket: "gl18vn-381ae.firebasestorage.app",
-
-    messagingSenderId: "488520527287",
-
-    appId: "1:488520527287:web:940013d50c56d927390c32",
-
-    measurementId: "G-7FPR8W312Y"
-};
-
-const app = initializeApp(firebaseConfig);
 </html>
