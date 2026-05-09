@@ -1,72 +1,174 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Game Detail</title>
 
 <style>
 
 body{
-    background:#0f172a;
+
+    background:url("https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1600");
+
+    background-size:cover;
+
+    background-position:center;
+
+    background-attachment:fixed;
+
     color:white;
+
+    min-height:100vh;
+
+    position:relative;
+
     font-family:Arial;
 }
 
+body::before{
+
+    content:"";
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,0.5);
+
+    z-index:-1;
+}
+
 .container{
+
     width:95%;
+
     max-width:1200px;
+
     margin:auto;
+
     padding:30px 0 80px;
 }
 
+.back-btn{
+
+    display:inline-block;
+
+    margin-bottom:25px;
+
+    padding:14px 22px;
+
+    background:#2563eb;
+
+    color:white;
+
+    text-decoration:none;
+
+    border-radius:14px;
+}
+
 .banner{
+
     width:100%;
+
     height:450px;
+
     object-fit:cover;
+
     border-radius:24px;
+
     margin-bottom:30px;
 }
 
 .title{
+
     font-size:42px;
+
     margin-bottom:20px;
+
     color:#60a5fa;
+
+    text-shadow:0 0 15px #60a5fa;
 }
 
 .info{
-    background:#1e293b;
+
+    background:rgba(0,0,0,0.5);
+
     padding:25px;
+
     border-radius:20px;
+
     margin-bottom:30px;
+
+    backdrop-filter:blur(10px);
 }
 
 .info p{
+
     margin-bottom:15px;
+
     line-height:1.7;
 }
 
 .download-btn{
+
     display:inline-block;
+
     padding:15px 25px;
+
     background:#2563eb;
+
     color:white;
+
     text-decoration:none;
+
     border-radius:14px;
+
     margin-top:15px;
 }
 
 .gallery{
+
     display:grid;
+
     grid-template-columns:repeat(2,1fr);
+
     gap:20px;
 }
 
 .gallery img{
+
     width:100%;
+
     height:250px;
+
     object-fit:cover;
+
     border-radius:18px;
+}
+
+.snow{
+
+    position:fixed;
+
+    top:-10px;
+
+    color:white;
+
+    pointer-events:none;
+
+    animation:snowFall linear forwards;
+}
+
+@keyframes snowFall{
+
+    to{
+
+        transform:translateY(110vh);
+
+        opacity:0;
+    }
 }
 
 @media(max-width:700px){
@@ -82,9 +184,16 @@ body{
 
 </style>
 </head>
+
 <body>
 
 <div class="container">
+
+<a href="index.html" class="back-btn">
+
+    ← Trang Chủ
+
+</a>
 
 <div id="content"></div>
 
@@ -98,7 +207,9 @@ from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 import {
     getFirestore,
     collection,
-    getDocs
+    getDocs,
+    query,
+    orderBy
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
@@ -135,7 +246,13 @@ parseInt(params.get("id"));
 async function loadGame(){
 
     const querySnapshot =
-    await getDocs(collection(db,"games"));
+    await getDocs(
+
+        query(
+            collection(db,"games"),
+            orderBy("createdAt","desc")
+        )
+    );
 
     const games = [];
 
@@ -177,7 +294,7 @@ async function loadGame(){
         </p>
 
         <a
-            href="${game.download}"
+            href="https://${game.download.replace(/^https?:\/\//, '')}"
             target="_blank"
             class="download-btn"
         >
@@ -202,6 +319,42 @@ async function loadGame(){
 }
 
 loadGame();
+
+</script>
+
+<script>
+
+function createSnow(){
+
+    const snow =
+    document.createElement("div");
+
+    snow.classList.add("snow");
+
+    snow.innerHTML = "❀";
+
+    snow.style.left =
+    Math.random() * window.innerWidth + "px";
+
+    snow.style.fontSize =
+    Math.random() * 20 + 10 + "px";
+
+    snow.style.opacity =
+    Math.random();
+
+    snow.style.animationDuration =
+    Math.random() * 5 + 5 + "s";
+
+    document.body.appendChild(snow);
+
+    setTimeout(()=>{
+
+        snow.remove();
+
+    },10000);
+}
+
+setInterval(createSnow,300);
 
 </script>
 
