@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Game Hub</title>
+
+<title>Game Hub Firebase</title>
 
 <style>
 
@@ -18,7 +19,10 @@ body{
     background:linear-gradient(180deg,#0f172a,#111827,#1e293b);
     color:white;
     min-height:100vh;
+    overflow-x:hidden;
 }
+
+/* HEADER */
 
 header{
     position:sticky;
@@ -31,7 +35,6 @@ header{
     border-bottom:1px solid rgba(255,255,255,0.08);
 
     padding:22px 15px;
-
     text-align:center;
 }
 
@@ -39,6 +42,18 @@ header h1{
     color:#60a5fa;
     font-size:38px;
     margin-bottom:18px;
+
+    animation:glow 2s infinite alternate;
+}
+
+@keyframes glow{
+    from{
+        text-shadow:0 0 10px #3b82f6;
+    }
+
+    to{
+        text-shadow:0 0 25px #60a5fa;
+    }
 }
 
 .top-buttons{
@@ -50,4 +65,476 @@ header h1{
 
 .top-buttons button{
     border:none;
+    border-radius:14px;
+
+    padding:12px 22px;
+
+    background:linear-gradient(135deg,#2563eb,#3b82f6);
+
+    color:white;
+
+    cursor:pointer;
+
+    transition:0.3s;
+
+    box-shadow:0 5px 15px rgba(37,99,235,0.35);
+}
+
+.top-buttons button:hover{
+    transform:translateY(-3px) scale(1.05);
+}
+
+/* CONTAINER */
+
+.container{
+    width:95%;
+    max-width:1500px;
+    margin:auto;
+
+    padding:30px 0 80px;
+}
+
+/* INTRO */
+
+.intro{
+    background:rgba(255,255,255,0.05);
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    border-radius:24px;
+
+    padding:35px 25px;
+
+    margin-bottom:40px;
+
+    text-align:center;
+
+    backdrop-filter:blur(10px);
+
+    animation:fadeUp 1s ease;
+}
+
+.intro h2{
+    color:#60a5fa;
+    font-size:34px;
+    margin-bottom:15px;
+}
+
+.intro p{
+    color:#d1d5db;
+    line-height:1.8;
+    max-width:850px;
+    margin:auto;
+    font-size:17px;
+}
+
+@keyframes fadeUp{
+
+    from{
+        opacity:0;
+        transform:translateY(30px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* GRID */
+
+.game-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:30px;
+}
+
+/* CARD */
+
+.game-card{
+    background:rgba(31,41,55,0.95);
+
+    border-radius:24px;
+
+    overflow:hidden;
+
+    transition:0.35s;
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    box-shadow:0 10px 25px rgba(0,0,0,0.35);
+
+    animation:fadeUp 0.7s ease;
+}
+
+.game-card:hover{
+    transform:translateY(-8px) scale(1.03);
+
+    box-shadow:0 15px 35px rgba(59,130,246,0.25);
+}
+
+.game-card img{
+    width:100%;
+    height:260px;
+    object-fit:cover;
+
+    transition:0.4s;
+}
+
+.game-card:hover img{
+    transform:scale(1.08);
+}
+
+.game-info{
+    padding:22px;
+}
+
+.game-info h3{
+    font-size:25px;
+    margin-bottom:12px;
+
+    color:#60a5fa;
+}
+
+.game-info p{
+    color:#d1d5db;
+    line-height:1.6;
+}
+
+/* PAGINATION */
+
+.pagination{
+    margin-top:45px;
+
+    display:flex;
+    justify-content:center;
+    gap:12px;
+}
+
+.pagination button{
+    width:50px;
+    height:50px;
+
+    border:none;
+    border-radius:14px;
+
+    background:#1e293b;
+    color:white;
+
+    cursor:pointer;
+
+    transition:0.3s;
+
+    font-size:18px;
+}
+
+.pagination button:hover{
+    background:#3b82f6;
+    transform:translateY(-2px);
+}
+
+.pagination button.active{
+    background:#2563eb;
+
+    box-shadow:0 0 15px rgba(37,99,235,0.5);
+}
+
+/* LOADING */
+
+.loading{
+    text-align:center;
+    margin-top:60px;
+    font-size:22px;
+    color:#60a5fa;
+}
+
+/* FOOTER */
+
+.footer{
+    margin-top:70px;
+    text-align:center;
+    color:#94a3b8;
+}
+
+/* MOBILE */
+
+@media(max-width:1000px){
+
+    .game-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:700px){
+
+    header h1{
+        font-size:30px;
+    }
+
+    .top-buttons button{
+        flex:1 1 40%;
+    }
+
+    .intro h2{
+        font-size:28px;
+    }
+
+    .intro p{
+        font-size:15px;
+    }
+
+    .game-grid{
+        grid-template-columns:1fr;
+    }
+
+    .game-card img{
+        height:240px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+    <h1>🎮 GAME HUB</h1>
+
+    <div class="top-buttons">
+
+        <button>Trang Chủ</button>
+        <button>Game Hot</button>
+        <button>Thể Loại</button>
+        <button>Liên Hệ</button>
+
+    </div>
+
+</header>
+
+<div class="container">
+
+    <div class="intro">
+
+        <h2>Kho Game Hot Nhất Hiện Nay</h2>
+
+        <p>
+            Website game hiện đại sử dụng Firebase Database.
+            Bạn có thể thêm hoặc xóa game trực tiếp trên Firebase
+            mà không cần sửa code website.
+        </p>
+
+    </div>
+
+    <div id="loading" class="loading">
+        Đang tải game...
+    </div>
+
+    <div id="gameGrid" class="game-grid"></div>
+
+    <div class="pagination" id="pagination"></div>
+
+    <div class="footer">
+        © 2026 Game Hub Firebase
+    </div>
+
+</div>
+
+<script type="module">
+
+/* =========================
+FIREBASE IMPORT
+========================= */
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+import {
+    getFirestore,
+    collection,
+    getDocs
+}
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+
+/* =========================
+FIREBASE CONFIG
+========================= */
+
+const firebaseConfig = {
+
+  apiKey: "AIzaSyDJiIiAKSUbRjhsCloddYmoDHmAx-cJKzE",
+
+  authDomain: "gl18vn-381ae.firebaseapp.com",
+
+  projectId: "gl18vn-381ae",
+
+  storageBucket: "gl18vn-381ae.firebasestorage.app",
+
+  messagingSenderId: "488520527287",
+
+  appId: "1:488520527287:web:940013d50c56d927390c32",
+
+  measurementId: "G-7FPR8W312Y"
+};
+
+
+/* =========================
+INIT FIREBASE
+========================= */
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+
+/* =========================
+ELEMENTS
+========================= */
+
+const gameGrid = document.getElementById("gameGrid");
+
+const pagination = document.getElementById("pagination");
+
+const loading = document.getElementById("loading");
+
+
+/* =========================
+DATA
+========================= */
+
+let games = [];
+
+const gamesPerPage = 9;
+
+let currentPage = 1;
+
+
+/* =========================
+LOAD GAMES FROM FIREBASE
+========================= */
+
+async function loadGames(){
+
+    try{
+
+        const querySnapshot =
+        await getDocs(collection(db, "games"));
+
+        games = [];
+
+        querySnapshot.forEach((doc)=>{
+
+            games.push(doc.data());
+
+        });
+
+        loading.style.display = "none";
+
+        renderGames(currentPage);
+
+    }
+
+    catch(error){
+
+        loading.innerHTML =
+        "❌ Không thể tải dữ liệu Firebase";
+
+        console.error(error);
+    }
+}
+
+
+/* =========================
+RENDER GAMES
+========================= */
+
+function renderGames(page){
+
+    gameGrid.innerHTML = "";
+
+    const start = (page - 1) * gamesPerPage;
+
+    const end = start + gamesPerPage;
+
+    const currentGames = games.slice(start,end);
+
+    currentGames.forEach(game=>{
+
+        gameGrid.innerHTML += `
+
+        <div class="game-card">
+
+            <img src="${game.img}" alt="${game.name}">
+
+            <div class="game-info">
+
+                <h3>${game.name}</h3>
+
+                <p>${game.desc}</p>
+
+            </div>
+
+        </div>
+
+        `;
+    });
+
+    renderPagination();
+}
+
+
+/* =========================
+PAGINATION
+========================= */
+
+function renderPagination(){
+
+    pagination.innerHTML = "";
+
+    const totalPages =
+    Math.ceil(games.length / gamesPerPage);
+
+    for(let i=1;i<=totalPages;i++){
+
+        pagination.innerHTML += `
+
+        <button
+            class="${i===currentPage ? 'active' : ''}"
+            onclick="changePage(${i})"
+        >
+
+            ${i}
+
+        </button>
+
+        `;
+    }
+}
+
+window.changePage = function(page){
+
+    currentPage = page;
+
+    renderGames(page);
+
+    window.scrollTo({
+
+        top:350,
+        behavior:"smooth"
+
+    });
+}
+
+
+/* =========================
+START
+========================= */
+
+loadGames();
+
+</script>
+
+</body>
 </html>
