@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-<title>Game Hub Firebase</title>
+<title>Game Hub</title>
 
 <style>
 
@@ -25,28 +25,35 @@ body{
 /* HEADER */
 
 header{
+
     position:sticky;
     top:0;
     z-index:1000;
 
     background:rgba(15,23,42,0.95);
+
     backdrop-filter:blur(10px);
 
     border-bottom:1px solid rgba(255,255,255,0.08);
 
     padding:22px 15px;
+
     text-align:center;
 }
 
 header h1{
+
     color:#60a5fa;
+
     font-size:38px;
+
     margin-bottom:18px;
 
     animation:glow 2s infinite alternate;
 }
 
 @keyframes glow{
+
     from{
         text-shadow:0 0 10px #3b82f6;
     }
@@ -57,14 +64,19 @@ header h1{
 }
 
 .top-buttons{
+
     display:flex;
     justify-content:center;
+
     gap:12px;
+
     flex-wrap:wrap;
 }
 
 .top-buttons button{
+
     border:none;
+
     border-radius:14px;
 
     padding:12px 22px;
@@ -81,14 +93,17 @@ header h1{
 }
 
 .top-buttons button:hover{
+
     transform:translateY(-3px) scale(1.05);
 }
 
 /* CONTAINER */
 
 .container{
+
     width:95%;
     max-width:1500px;
+
     margin:auto;
 
     padding:30px 0 80px;
@@ -97,6 +112,7 @@ header h1{
 /* INTRO */
 
 .intro{
+
     background:rgba(255,255,255,0.05);
 
     border:1px solid rgba(255,255,255,0.08);
@@ -115,16 +131,24 @@ header h1{
 }
 
 .intro h2{
+
     color:#60a5fa;
+
     font-size:34px;
+
     margin-bottom:15px;
 }
 
 .intro p{
+
     color:#d1d5db;
+
     line-height:1.8;
+
     max-width:850px;
+
     margin:auto;
+
     font-size:17px;
 }
 
@@ -144,14 +168,18 @@ header h1{
 /* GRID */
 
 .game-grid{
+
     display:grid;
+
     grid-template-columns:repeat(3,1fr);
+
     gap:30px;
 }
 
 /* CARD */
 
 .game-card{
+
     background:rgba(31,41,55,0.95);
 
     border-radius:24px;
@@ -168,57 +196,73 @@ header h1{
 }
 
 .game-card:hover{
+
     transform:translateY(-8px) scale(1.03);
 
     box-shadow:0 15px 35px rgba(59,130,246,0.25);
 }
 
 .game-card img{
+
     width:100%;
+
     height:260px;
+
     object-fit:cover;
 
     transition:0.4s;
 }
 
 .game-card:hover img{
+
     transform:scale(1.08);
 }
 
 .game-info{
+
     padding:22px;
 }
 
 .game-info h3{
+
     font-size:25px;
+
     margin-bottom:12px;
 
     color:#60a5fa;
 }
 
 .game-info p{
+
     color:#d1d5db;
+
     line-height:1.6;
 }
 
 /* PAGINATION */
 
 .pagination{
+
     margin-top:45px;
 
     display:flex;
+
     justify-content:center;
+
     gap:12px;
 }
 
 .pagination button{
+
     width:50px;
     height:50px;
 
     border:none;
+
     border-radius:14px;
 
     background:#1e293b;
+
     color:white;
 
     cursor:pointer;
@@ -229,11 +273,14 @@ header h1{
 }
 
 .pagination button:hover{
+
     background:#3b82f6;
+
     transform:translateY(-2px);
 }
 
 .pagination button.active{
+
     background:#2563eb;
 
     box-shadow:0 0 15px rgba(37,99,235,0.5);
@@ -242,17 +289,24 @@ header h1{
 /* LOADING */
 
 .loading{
+
     text-align:center;
+
     margin-top:60px;
+
     font-size:22px;
+
     color:#60a5fa;
 }
 
 /* FOOTER */
 
 .footer{
+
     margin-top:70px;
+
     text-align:center;
+
     color:#94a3b8;
 }
 
@@ -263,7 +317,6 @@ header h1{
     .game-grid{
         grid-template-columns:repeat(2,1fr);
     }
-
 }
 
 @media(max-width:700px){
@@ -307,7 +360,9 @@ header h1{
         <button>Trang Chủ</button>
         <button>Game Hot</button>
         <button>Thể Loại</button>
-        <button>Liên Hệ</button>
+        <button onclick="location.href='admin.html'">
+            Admin
+        </button>
 
     </div>
 
@@ -321,7 +376,7 @@ header h1{
 
         <p>
             Website game hiện đại sử dụng Firebase Database.
-            Bạn có thể thêm hoặc xóa game trực tiếp trên Firebase
+            Bạn có thể thêm hoặc xóa game trực tiếp bằng admin panel
             mà không cần sửa code website.
         </p>
 
@@ -351,9 +406,11 @@ import { initializeApp }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
 import {
+
     getFirestore,
     collection,
     getDocs
+
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
@@ -364,19 +421,19 @@ FIREBASE CONFIG
 
 const firebaseConfig = {
 
-  apiKey: "AIzaSyDJiIiAKSUbRjhsCloddYmoDHmAx-cJKzE",
+    apiKey: "AIzaSyDJiIiAKSUbRjhsCloddYmoDHmAx-cJKzE",
 
-  authDomain: "gl18vn-381ae.firebaseapp.com",
+    authDomain: "gl18vn-381ae.firebaseapp.com",
 
-  projectId: "gl18vn-381ae",
+    projectId: "gl18vn-381ae",
 
-  storageBucket: "gl18vn-381ae.firebasestorage.app",
+    storageBucket: "gl18vn-381ae.firebasestorage.app",
 
-  messagingSenderId: "488520527287",
+    messagingSenderId: "488520527287",
 
-  appId: "1:488520527287:web:940013d50c56d927390c32",
+    appId: "1:488520527287:web:940013d50c56d927390c32",
 
-  measurementId: "G-7FPR8W312Y"
+    measurementId: "G-7FPR8W312Y"
 };
 
 
@@ -393,11 +450,14 @@ const db = getFirestore(app);
 ELEMENTS
 ========================= */
 
-const gameGrid = document.getElementById("gameGrid");
+const gameGrid =
+document.getElementById("gameGrid");
 
-const pagination = document.getElementById("pagination");
+const pagination =
+document.getElementById("pagination");
 
-const loading = document.getElementById("loading");
+const loading =
+document.getElementById("loading");
 
 
 /* =========================
@@ -412,7 +472,7 @@ let currentPage = 1;
 
 
 /* =========================
-LOAD GAMES FROM FIREBASE
+LOAD GAMES
 ========================= */
 
 async function loadGames(){
@@ -420,7 +480,7 @@ async function loadGames(){
     try{
 
         const querySnapshot =
-        await getDocs(collection(db, "games"));
+        await getDocs(collection(db,"games"));
 
         games = [];
 
@@ -433,15 +493,14 @@ async function loadGames(){
         loading.style.display = "none";
 
         renderGames(currentPage);
-
     }
 
     catch(error){
 
+        console.error(error);
+
         loading.innerHTML =
         "❌ Không thể tải dữ liệu Firebase";
-
-        console.error(error);
     }
 }
 
@@ -454,13 +513,17 @@ function renderGames(page){
 
     gameGrid.innerHTML = "";
 
-    const start = (page - 1) * gamesPerPage;
+    const start =
+    (page - 1) * gamesPerPage;
 
-    const end = start + gamesPerPage;
+    const end =
+    start + gamesPerPage;
 
-    const currentGames = games.slice(start,end);
+    const currentGames =
+    games.slice(start,end);
 
-    currentGames.forEach(game=>{
+
+    currentGames.forEach((game)=>{
 
         gameGrid.innerHTML += `
 
@@ -513,6 +576,7 @@ function renderPagination(){
     }
 }
 
+
 window.changePage = function(page){
 
     currentPage = page;
@@ -522,10 +586,10 @@ window.changePage = function(page){
     window.scrollTo({
 
         top:350,
-        behavior:"smooth"
 
+        behavior:"smooth"
     });
-}
+};
 
 
 /* =========================
