@@ -62,6 +62,41 @@ header h1{
     text-shadow:0 0 20px #60a5fa;
 }
 
+.top-buttons{
+
+    margin-top:20px;
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:12px;
+
+    flex-wrap:wrap;
+}
+
+.top-buttons button{
+
+    border:none;
+
+    border-radius:14px;
+
+    padding:12px 22px;
+
+    background:linear-gradient(135deg,#2563eb,#60a5fa);
+
+    color:white;
+
+    cursor:pointer;
+
+    transition:0.3s;
+}
+
+.top-buttons button:hover{
+
+    transform:scale(1.05);
+}
+
 .container{
 
     width:95%;
@@ -84,6 +119,8 @@ header h1{
     margin-bottom:40px;
 
     backdrop-filter:blur(10px);
+
+    text-align:center;
 }
 
 .intro h2{
@@ -93,6 +130,15 @@ header h1{
     margin-bottom:15px;
 
     font-size:34px;
+}
+
+.intro p{
+
+    color:#f1f5f9;
+
+    line-height:1.8;
+
+    font-size:18px;
 }
 
 .game-grid{
@@ -233,6 +279,10 @@ header h1{
     header h1{
         font-size:38px;
     }
+
+    .intro h2{
+        font-size:28px;
+    }
 }
 
 </style>
@@ -243,6 +293,22 @@ header h1{
 <header>
 
     <h1>🎮 GAME HUB</h1>
+
+    <div class="top-buttons">
+
+        <button>Trang Chủ</button>
+
+        <button>Game Hot</button>
+
+        <button>Thể Loại</button>
+
+        <button onclick="location.href='admin.html'">
+
+            Admin
+
+        </button>
+
+    </div>
 
 </header>
 
