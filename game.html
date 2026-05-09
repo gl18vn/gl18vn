@@ -1,3 +1,375 @@
+# FULL FILES - GAME HUB FIREBASE
+
+## 1. index.html
+
+```html
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Game Hub</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:linear-gradient(180deg,#0f172a,#111827,#1e293b);
+    color:white;
+    min-height:100vh;
+}
+
+header{
+    position:sticky;
+    top:0;
+    z-index:1000;
+
+    background:rgba(15,23,42,0.95);
+    backdrop-filter:blur(10px);
+
+    border-bottom:1px solid rgba(255,255,255,0.08);
+
+    padding:22px 15px;
+
+    text-align:center;
+}
+
+header h1{
+    color:#60a5fa;
+    font-size:38px;
+    margin-bottom:18px;
+}
+
+.top-buttons{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.top-buttons button{
+    border:none;
+    border-radius:14px;
+    padding:12px 22px;
+    background:linear-gradient(135deg,#2563eb,#3b82f6);
+    color:white;
+    cursor:pointer;
+}
+
+.container{
+    width:95%;
+    max-width:1500px;
+    margin:auto;
+    padding:30px 0 80px;
+}
+
+.intro{
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:24px;
+    padding:35px 25px;
+    margin-bottom:40px;
+    text-align:center;
+}
+
+.intro h2{
+    color:#60a5fa;
+    font-size:34px;
+    margin-bottom:15px;
+}
+
+.intro p{
+    color:#d1d5db;
+    line-height:1.8;
+}
+
+.game-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:30px;
+}
+
+.game-link{
+    text-decoration:none;
+    color:white;
+}
+
+.game-card{
+    background:rgba(31,41,55,0.95);
+    border-radius:24px;
+    overflow:hidden;
+    transition:0.35s;
+    border:1px solid rgba(255,255,255,0.08);
+}
+
+.game-card:hover{
+    transform:translateY(-8px) scale(1.03);
+}
+
+.game-card img{
+    width:100%;
+    height:260px;
+    object-fit:cover;
+}
+
+.game-info{
+    padding:22px;
+}
+
+.game-info h3{
+    font-size:25px;
+    margin-bottom:12px;
+    color:#60a5fa;
+}
+
+.pagination{
+    margin-top:45px;
+    display:flex;
+    justify-content:center;
+    gap:12px;
+}
+
+.pagination button{
+    width:50px;
+    height:50px;
+    border:none;
+    border-radius:14px;
+    background:#1e293b;
+    color:white;
+    cursor:pointer;
+}
+
+.pagination button.active{
+    background:#2563eb;
+}
+
+.loading{
+    text-align:center;
+    margin-top:60px;
+    font-size:22px;
+    color:#60a5fa;
+}
+
+.footer{
+    margin-top:70px;
+    text-align:center;
+    color:#94a3b8;
+}
+
+@media(max-width:1000px){
+
+    .game-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:700px){
+
+    .game-grid{
+        grid-template-columns:1fr;
+    }
+
+    header h1{
+        font-size:30px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+    <h1>🎮 GAME HUB</h1>
+
+    <div class="top-buttons">
+
+        <button>Trang Chủ</button>
+        <button>Game Hot</button>
+        <button>Thể Loại</button>
+        <button onclick="location.href='admin.html'">
+            Admin
+        </button>
+
+    </div>
+
+</header>
+
+<div class="container">
+
+    <div class="intro">
+
+        <h2>Kho Game Hot Nhất Hiện Nay</h2>
+
+        <p>
+            Website game hiện đại sử dụng Firebase Database.
+        </p>
+
+    </div>
+
+    <div id="loading" class="loading">
+        Đang tải game...
+    </div>
+
+    <div id="gameGrid" class="game-grid"></div>
+
+    <div class="pagination" id="pagination"></div>
+
+    <div class="footer">
+        © 2026 Game Hub Firebase
+    </div>
+
+</div>
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+import {
+    getFirestore,
+    collection,
+    getDocs
+}
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+const firebaseConfig = {
+
+    apiKey: "AIzaSyDJiIiAKSUbRjhsCloddYmoDHmAx-cJKzE",
+
+    authDomain: "gl18vn-381ae.firebaseapp.com",
+
+    projectId: "gl18vn-381ae",
+
+    storageBucket: "gl18vn-381ae.firebasestorage.app",
+
+    messagingSenderId: "488520527287",
+
+    appId: "1:488520527287:web:940013d50c56d927390c32",
+
+    measurementId: "G-7FPR8W312Y"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+const gameGrid = document.getElementById("gameGrid");
+const pagination = document.getElementById("pagination");
+const loading = document.getElementById("loading");
+
+let games = [];
+const gamesPerPage = 9;
+let currentPage = 1;
+
+async function loadGames(){
+
+    const querySnapshot =
+    await getDocs(collection(db,"games"));
+
+    games = [];
+
+    querySnapshot.forEach((doc)=>{
+
+        games.push(doc.data());
+    });
+
+    loading.style.display = "none";
+
+    renderGames(currentPage);
+}
+
+function renderGames(page){
+
+    gameGrid.innerHTML = "";
+
+    const start = (page - 1) * gamesPerPage;
+
+    const end = start + gamesPerPage;
+
+    const currentGames = games.slice(start,end);
+
+
+    currentGames.forEach((game,index)=>{
+
+        gameGrid.innerHTML += `
+
+        <a
+            href="game.html?id=${start + index}"
+            class="game-link"
+        >
+
+            <div class="game-card">
+
+                <img src="${game.img}">
+
+                <div class="game-info">
+
+                    <h3>${game.name}</h3>
+
+                    <p>${game.desc}</p>
+
+                </div>
+
+            </div>
+
+        </a>
+
+        `;
+    });
+
+    renderPagination();
+}
+
+function renderPagination(){
+
+    pagination.innerHTML = "";
+
+    const totalPages =
+    Math.ceil(games.length / gamesPerPage);
+
+    for(let i=1;i<=totalPages;i++){
+
+        pagination.innerHTML += `
+
+        <button
+            class="${i===currentPage ? 'active' : ''}"
+            onclick="changePage(${i})"
+        >
+            ${i}
+        </button>
+
+        `;
+    }
+}
+
+window.changePage = function(page){
+
+    currentPage = page;
+
+    renderGames(page);
+};
+
+loadGames();
+
+</script>
+
+</body>
+</html>
+```
+
+---
+
+# 2. game.html
+
+```html
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -82,4 +454,345 @@ body{
 
 </style>
 </head>
+<body>
+
+<div class="container">
+
+    <a href="index.html" class="back-btn">
+        ← Quay Lại
+    </a>
+
+    <div id="content"></div>
+
+</div>
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+import {
+    getFirestore,
+    collection,
+    getDocs
+}
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+const firebaseConfig = {
+
+    apiKey: "AIzaSyDJiIiAKSUbRjhsCloddYmoDHmAx-cJKzE",
+
+    authDomain: "gl18vn-381ae.firebaseapp.com",
+
+    projectId: "gl18vn-381ae",
+
+    storageBucket: "gl18vn-381ae.firebasestorage.app",
+
+    messagingSenderId: "488520527287",
+
+    appId: "1:488520527287:web:940013d50c56d927390c32",
+
+    measurementId: "G-7FPR8W312Y"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+const content = document.getElementById("content");
+
+const params = new URLSearchParams(window.location.search);
+
+const id = parseInt(params.get("id"));
+
+async function loadGame(){
+
+    const querySnapshot =
+    await getDocs(collection(db,"games"));
+
+    const games = [];
+
+    querySnapshot.forEach((doc)=>{
+
+        games.push(doc.data());
+    });
+
+    const game = games[id];
+
+    content.innerHTML = `
+
+    <img class="banner" src="${game.img}">
+
+    <h1 class="title">
+        ${game.name}
+    </h1>
+
+    <p class="desc">
+        ${game.desc}
+    </p>
+
+    <div class="gallery">
+
+        <img src="${game.image1}">
+
+        <img src="${game.image2}">
+
+        <img src="${game.image3}">
+
+        <img src="${game.image4}">
+
+    </div>
+
+    `;
+}
+
+loadGame();
+
+</script>
+
+</body>
 </html>
+```
+
+---
+
+# 3. admin.html
+
+```html
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin</title>
+
+<style>
+
+body{
+    background:#0f172a;
+    color:white;
+    font-family:Arial;
+    padding:30px;
+}
+
+.container{
+    max-width:700px;
+    margin:auto;
+}
+
+input,
+textarea,
+button{
+    width:100%;
+    margin-bottom:15px;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+}
+
+button{
+    background:#2563eb;
+    color:white;
+    cursor:pointer;
+}
+
+.card{
+    background:#1e293b;
+    padding:25px;
+    border-radius:20px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>🎮 Admin Panel</h1>
+
+<button id="loginBtn">
+    Login Google
+</button>
+
+<div class="card">
+
+<input type="text" id="name" placeholder="Tên game">
+
+<input type="text" id="img" placeholder="Ảnh banner">
+
+<textarea id="desc" placeholder="Mô tả"></textarea>
+
+<input type="text" id="image1" placeholder="Ảnh 1">
+
+<input type="text" id="image2" placeholder="Ảnh 2">
+
+<input type="text" id="image3" placeholder="Ảnh 3">
+
+<input type="text" id="image4" placeholder="Ảnh 4">
+
+<button id="addBtn">
+    Thêm Game
+</button>
+
+<div id="status"></div>
+
+</div>
+
+</div>
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+import {
+    getFirestore,
+    collection,
+    addDoc
+}
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+import {
+    getAuth,
+    GoogleAuthProvider,
+    signInWithPopup
+}
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+
+const firebaseConfig = {
+
+    apiKey: "AIzaSyDJiIiAKSUbRjhsCloddYmoDHmAx-cJKzE",
+
+    authDomain: "gl18vn-381ae.firebaseapp.com",
+
+    projectId: "gl18vn-381ae",
+
+    storageBucket: "gl18vn-381ae.firebasestorage.app",
+
+    messagingSenderId: "488520527287",
+
+    appId: "1:488520527287:web:940013d50c56d927390c32",
+
+    measurementId: "G-7FPR8W312Y"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+const auth = getAuth(app);
+
+const provider = new GoogleAuthProvider();
+
+const loginBtn = document.getElementById("loginBtn");
+
+const addBtn = document.getElementById("addBtn");
+
+const statusDiv = document.getElementById("status");
+
+loginBtn.onclick = async ()=>{
+
+    await signInWithPopup(auth, provider);
+};
+
+addBtn.onclick = async ()=>{
+
+    const name = document.getElementById("name").value;
+
+    const img = document.getElementById("img").value;
+
+    const desc = document.getElementById("desc").value;
+
+    const image1 = document.getElementById("image1").value;
+
+    const image2 = document.getElementById("image2").value;
+
+    const image3 = document.getElementById("image3").value;
+
+    const image4 = document.getElementById("image4").value;
+
+    await addDoc(collection(db,"games"),{
+
+        name,
+        img,
+        desc,
+        image1,
+        image2,
+        image3,
+        image4,
+
+        createdAt: Date.now()
+    });
+
+    statusDiv.innerHTML = "✅ Đã thêm game";
+};
+
+</script>
+
+</body>
+</html>
+```
+
+---
+
+# Firebase Rules
+
+```js
+rules_version = '2';
+
+service cloud.firestore {
+
+  match /databases/{database}/documents {
+
+    match /games/{document=**} {
+
+      allow read: if true;
+
+      allow write:
+
+      if request.auth != null
+
+      && request.auth.token.email == "YOUR_GMAIL@gmail.com";
+
+    }
+  }
+}
+```
+
+---
+
+# Firebase Data Structure
+
+```text
+name
+img
+desc
+image1
+image2
+image3
+image4
+```
+
+---
+
+# Upload lên GitHub
+
+Upload:
+
+```text
+index.html
+game.html
+admin.html
+```
+
+Website:
+
+```text
+https://gl18vn.github.io/gl18vn/
+```
+
+Admin:
+
+```text
+https://gl18vn.github.io/gl18vn/admin.html
+```
